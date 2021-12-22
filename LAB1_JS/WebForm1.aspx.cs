@@ -4,24 +4,25 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Diagnostics;
+using System.Collections;
+using System.Data;
 
 namespace LAB1_JS
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            
-        }
 
-        protected void Button1_Click(object sender, EventArgs e)
+
+        protected void Page_Load(object sender, EventArgs e)
         {
 
         }
 
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(DropDownList1.SelectedItem.Value)
+            Session["zmianyukladu"] = (int)Session["zmianyukladu"] + 1;
+            switch (DropDownList1.SelectedItem.Value)
             {
                 case "0":
                     Image0.Style.Add("top", "0%");
@@ -135,6 +136,7 @@ namespace LAB1_JS
 
         protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Session["zmianyrozmiaru"] = (int)Session["zmianyrozmiaru"] + 1;
             if (RadioButtonList1.SelectedItem.Value == "s")
             {
                 Image0.Style.Add("height", "30px");
@@ -183,6 +185,57 @@ namespace LAB1_JS
             }
 
             ;
+        }
+       
+
+        protected void JSButton1_Click1(object sender, EventArgs e)
+        {
+            List<JSlista> JSusers = (List<JSlista>)Application["users"];
+            if(!JSusers.Exists(x=> String.Equals(x.JSdane, JSTextBox1.Text)))
+            {
+                JSusers.Add(new JSlista(JSTextBox1.Text));
+                Application["users"] = JSusers;
+                CustomValidator1.IsValid = true;
+                Session["Imie_nazwisko"] = JSTextBox1.Text;
+                foreach (JSlista item in JSusers)
+                {
+                    Debug.WriteLine(item.getUz());
+                }
+                JSPanel1.Visible = true;
+                JSPanel2.Visible = false;
+                Label1.Text = JSTextBox1.Text;              
+                Debug.WriteLine((int)Application["licznik"]);
+            }
+            else
+            {
+                CustomValidator1.IsValid = false;
+                Debug.WriteLine("Takie imie jest juz w bazie");
+                
+            }
+           
+                
+        }
+
+        protected void DetailsView1_PageIndexChanging(object sender, DetailsViewPageEventArgs e)
+        {
+
+        }
+
+        protected void Timer1_Tick(object sender, EventArgs e)
+        {
+            DropDownList dl = new DropDownList();
+            List<JSlista> JSusers = (List<JSlista>)Application["users"];
+            DropDownList2.Items.Clear();
+            foreach (JSlista item in JSusers)
+            {
+                DropDownList2.Items.Add((string)item.getUz());
+            }
+            JSPanel1.Controls.Add(dl);
+            Label2.Text = (string)Application["data"];
+            Label3.Text = (string)Application["czas"];
+            Label4.Text = Application["licznik"].ToString();
+            Label5.Text = Session["zmianyrozmiaru"].ToString();
+            Label6.Text = Session["zmianyukladu"].ToString();
         }
     }
 }
