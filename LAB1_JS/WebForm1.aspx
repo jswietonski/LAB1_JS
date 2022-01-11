@@ -65,7 +65,7 @@
         <asp:Panel ID="JSPanel2" runat="server" Visible="true">
             <div class ="regform">
                 <b>Podaj imie i nazwisko</b><br />
-                <asp:TextBox ID="JSTextBox1" runat="server"></asp:TextBox>
+                <asp:TextBox ID="JSTextBox1" runat="server" OnTextChanged="JSTextBox1_TextChanged"></asp:TextBox>
                 <asp:Button ID="JSButton1" runat="server" Text="Zarejestruj" OnClick="JSButton1_Click1" /><br />
                 <asp:ValidationSummary ID="ValidationSummary1" runat="server" ShowMessageBox="false" DisplayMode="BulletList" ShowSummary="true" />
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" ControlToValidate="JSTextBox1" ValidationExpression ="[a-zA-Z]+\s[a-zA-Z]+" runat="server" ErrorMessage="Identyfikator nie jest zgodny ze wzorcem" Display="None" />
@@ -112,22 +112,26 @@
 
                     <asp:Label id="dane2" runat="server" Text="Godzina uruchomienia:"></asp:Label>
                         <asp:Label id="Label3"  runat="server" Text="" CssClass="JSlabel"></asp:Label><br />
-
-                    <asp:Label id="dane3" runat="server" Text="Ile uzytkownikow:" CssClass="JSlabel"></asp:Label>
+                    
+                    <asp:Label id="dane3" runat="server" Text="Ile zmian rozmiaru:" CssClass="JSlabel"></asp:Label>
                         <asp:Label id="Label4"  runat="server" Text="" CssClass="JSlabel"></asp:Label><br />
 
-                    <asp:Label id="dane4" runat="server" Text="Ile zmian rozmiaru:" CssClass="JSlabel"></asp:Label>
+                    <asp:Label id="dane4" runat="server" Text="Ile zmian ukladu:" CssClass="JSlabel"></asp:Label>
                         <asp:Label id="Label5"  runat="server" Text="" CssClass="JSlabel"></asp:Label><br />
-
-                    <asp:Label id="dane5" runat="server" Text="Ile zmian ukladu:" CssClass="JSlabel"></asp:Label>
+                   
+                     <asp:Label id="dane5" runat="server" Text="Ile uzytkownikow:" CssClass="JSlabel"></asp:Label>
                         <asp:Label id="Label6"  runat="server" Text="" CssClass="JSlabel"></asp:Label><br />
+
+                    <asp:Label id="dane6" runat="server" Text="Ile aplikacji:" CssClass="JSlabel"></asp:Label>
+                        <asp:Label id="Label7"  runat="server" Text="" CssClass="JSlabel"></asp:Label><br />
+
                     </ContentTemplate>
                     <Triggers>
                     <asp:AsyncPostBackTrigger  ControlID="Timer1" EventName="Tick" />
                     </Triggers>
                 </asp:UpdatePanel>
                 </div>
-                <asp:Timer ID="Timer1" runat="server" Interval="15000" OnTick="Timer1_Tick">
+                <asp:Timer ID="Timer1" runat="server" Interval="1500" OnTick="Timer1_Tick">
 </asp:Timer> 
             </div>
             <div class ="two">

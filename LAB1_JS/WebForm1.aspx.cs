@@ -21,7 +21,8 @@ namespace LAB1_JS
 
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Session["zmianyukladu"] = (int)Session["zmianyukladu"] + 1;
+            DataClasses1DataContext dc = new DataClasses1DataContext();
+            DbManager.UPDATEpol(dc, JSTextBox1.Text);
             switch (DropDownList1.SelectedItem.Value)
             {
                 case "0":
@@ -136,7 +137,8 @@ namespace LAB1_JS
 
         protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Session["zmianyrozmiaru"] = (int)Session["zmianyrozmiaru"] + 1;
+            DataClasses1DataContext dc = new DataClasses1DataContext();
+            DbManager.UPDATEroz(dc, JSTextBox1.Text);
             if (RadioButtonList1.SelectedItem.Value == "s")
             {
                 Image0.Style.Add("height", "30px");
@@ -183,37 +185,42 @@ namespace LAB1_JS
 
 
             }
-
             ;
         }
        
 
         protected void JSButton1_Click1(object sender, EventArgs e)
         {
-            List<JSlista> JSusers = (List<JSlista>)Application["users"];
-            if(!JSusers.Exists(x=> String.Equals(x.JSdane, JSTextBox1.Text)))
+            DataClasses1DataContext dc = new DataClasses1DataContext();
+
+            if (DbManager.SELECT(dc, JSTextBox1.Text ))
             {
-                JSusers.Add(new JSlista(JSTextBox1.Text));
-                Application["users"] = JSusers;
-                CustomValidator1.IsValid = true;
-                Session["Imie_nazwisko"] = JSTextBox1.Text;
-                foreach (JSlista item in JSusers)
-                {
-                    Debug.WriteLine(item.getUz());
-                }
+                
                 JSPanel1.Visible = true;
                 JSPanel2.Visible = false;
-                Label1.Text = JSTextBox1.Text;              
-                Debug.WriteLine((int)Application["licznik"]);
+                Label1.Text = JSTextBox1.Text;
+                int maxID = DbManager.SELECTmaxID(dc);
+                DbManager.INSERT(dc, maxID+1, JSTextBox1.Text);
+                Debug.WriteLine("Nie ma w bazie");
+
             }
             else
             {
+                JSPanel1.Visible = true;
+                JSPanel2.Visible = false;
+                Label1.Text = JSTextBox1.Text;
                 CustomValidator1.IsValid = false;
                 Debug.WriteLine("Takie imie jest juz w bazie");
-                
+                List<string> list = DbManager.SELECTrow(dc, JSTextBox1.Text);
+                Label2.Text = list.ElementAt(1);
+                Label3.Text = list.ElementAt(2);
+                Label4.Text = list.ElementAt(4);
+                Label5.Text = list.ElementAt(5);
+                Label6.Text = list.ElementAt(3);
+
             }
-           
-                
+
+
         }
 
         protected void DetailsView1_PageIndexChanging(object sender, DetailsViewPageEventArgs e)
@@ -223,6 +230,7 @@ namespace LAB1_JS
 
         protected void Timer1_Tick(object sender, EventArgs e)
         {
+            DataClasses1DataContext dc = new DataClasses1DataContext();
             DropDownList dl = new DropDownList();
             List<JSlista> JSusers = (List<JSlista>)Application["users"];
             DropDownList2.Items.Clear();
@@ -231,11 +239,18 @@ namespace LAB1_JS
                 DropDownList2.Items.Add((string)item.getUz());
             }
             JSPanel1.Controls.Add(dl);
-            Label2.Text = (string)Application["data"];
-            Label3.Text = (string)Application["czas"];
-            Label4.Text = Application["licznik"].ToString();
-            Label5.Text = Session["zmianyrozmiaru"].ToString();
-            Label6.Text = Session["zmianyukladu"].ToString();
+            List<string> list = DbManager.SELECTrow(dc, JSTextBox1.Text);
+            Label2.Text = list.ElementAt(1);
+            Label3.Text = list.ElementAt(2);
+            Label4.Text = list.ElementAt(4);
+            Label5.Text = list.ElementAt(5);
+            Label6.Text = list.ElementAt(3);
+            Debug.WriteLine("Odswiezam");
+        }
+
+        protected void JSTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
